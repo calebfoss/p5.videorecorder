@@ -43,6 +43,8 @@ Class for recording video from the sketch. If no arguments are passed into the c
 
 The recorded video file may not be available immediately after the stop() method is called. Set the onFileReady callback to call a function when the recorder has finished creating the video file.
 
+Ability to record inputs may vary based on the browser. Recording the canvas is supported by most contemporary browsers (see [browser compatibility](https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/captureStream#browser_compatibility)), but recording media elements currently has limited support (see [browser compatibility](https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/captureStream#browser_compatibility)).
+
 #### Syntax
 
 `new p5.VideoRecorder([input], [format])`

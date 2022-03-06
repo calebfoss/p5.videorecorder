@@ -29,7 +29,7 @@ Create a new instance of the the p5.VideoRecorder class in your sketch.js file.
 
 ## Examples
 
-- [simple canvas](https://editor.p5js.org/cfoss/sketches/t6H_m8AeRhttps://editor.p5js.org/cfoss/sketches/t6H_m8AeR)
+- [simple canvas](https://editor.p5js.org/cfoss/sketches/t6H_m8AeR)
 - [canvas with sound](https://editor.p5js.org/cfoss/sketches/yYxZHMcI1)
 - [webcam](https://editor.p5js.org/cfoss/sketches/5SSZyFsEN)
 

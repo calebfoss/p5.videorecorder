@@ -26,6 +26,15 @@ Add p5.videorecorder.js to your sketch's index.html file in a script tag:
 ```
 
 Create a new instance of the the p5.VideoRecorder class in your sketch.js file.
+```
+let videoRecorder;
+
+function setup() {
+  createCanvas(400, 400);
+  videoRecorder = new p5.VideoRecorder();
+}
+```
+See [Examples](https://github.com/calebfoss/p5.videorecorder#examples) and [Reference](https://github.com/calebfoss/p5.videorecorder#reference) for usage.
 
 ## Examples
 

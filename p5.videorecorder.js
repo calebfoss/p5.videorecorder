@@ -37,7 +37,7 @@ p5.VideoRecorder = class {
     this.#createRecorder();
   }
   set format(format) {
-    if (p5.VideoRecorder.isFormatSupported(format) == false)
+    if (p5.VideoRecorder.isSupported(format) == false)
       throw `Video format ${format} not supported`;
     if (this.recording)
       throw "Can't set format while video recorder is recording";
@@ -123,7 +123,10 @@ p5.VideoRecorder = class {
     this.erase();
     this.#recorder.start();
   }
-  static isFormatSupported(format) {
+  isSupported(format) {
+    return p5.VideoRecorder.isSupported(format);
+  }
+  static isSupported(format) {
     return MediaRecorder.isTypeSupported(
       format.split("/").length > 1 ? format : `video/${format}`
     );

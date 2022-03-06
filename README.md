@@ -82,9 +82,13 @@ Ability to record inputs may vary based on the browser. Recording the canvas is 
 | ------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | addInput(input)           | add another input to the existing MediaStream                                                                                                                                                       |
 | erase()                   | delete the contents of the recording                                                                                                                                                                |
-| isFormatSupported(format) | returns true/false indicating whether the supplied [mimeType](https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Common_types) or video format is supported by the browser |
+| isSupported(format) | returns true/false indicating if the given [mimeType](https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Common_types) or video format is supported by the browser (calls static isSupported method on p5.VideoRecorder) |
 |pause()|pause the recording|
 |resume()|resume the recording|
 | save(filename)            | download the recording                                                                                                                                                                              |
 | start()                   | start recording                                                                                                                                                                                     |
 | stop()                    | stop recording, create Blob (video file) and url, and then call the onFileReady callback.                                                                                                           |
+#### Static Methods
+|name|description|
+|-|-|
+| isSupported(format) | returns true/false indicating if the given [mimeType](https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Common_types) or video format is supported by the browser |

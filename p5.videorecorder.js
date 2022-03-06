@@ -4,6 +4,7 @@ https://github.com/calebfoss/p5.videorecorder */
 p5.VideoRecorder = class {
   #blob;
   #chunks;
+  #input;
   #mimeType;
   #recorder;
   #stream;
@@ -20,6 +21,9 @@ p5.VideoRecorder = class {
   get stream() {
     return this.#stream;
   }
+  get input() {
+    return this.#input;
+  }
   set input(input) {
     if (this.#stream !== undefined && this.#stream === input) return;
     if (this.recording)
@@ -31,12 +35,12 @@ p5.VideoRecorder = class {
       this.addInput(drawingContext.canvas);
       if (typeof soundOut !== "undefined" && soundOut.output !== undefined)
         this.addInput(soundOut.output);
-
       return;
     }
     const stream = Array.isArray(input)
       ? this.#inputArrayToStream(input)
       : this.#inputToStream(input);
+    this.#input = input;
     this.#stream = stream;
     this.#createRecorder();
   }

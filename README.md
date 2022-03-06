@@ -73,7 +73,7 @@ Ability to record inputs may vary based on the browser. Recording the canvas is 
 | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
 | blob        | video file available after recording is completed (Read-only)                                                                              |
 | format      | [mimeType](https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Common_types) or extension to be used for recording |
-| input       | element, node, or array of elments/nodes to record (Write-only)                                                                            |
+| input       | element, node, or array of elments/nodes to record                                                                                         |
 | onFileReady | callback called after recording is completed and blob is created                                                                           |
 | stream      | MediaStream for selected input(s) (Read-only)                                                                                              |
 | url         | url pointing to video file available after recording is completed (Read-only)                                                              |

@@ -26,6 +26,7 @@ Add p5.videorecorder.js to your sketch's index.html file in a script tag:
 ```
 
 Create a new instance of the the p5.VideoRecorder class in your sketch.js file.
+
 ```
 let videoRecorder;
 
@@ -34,6 +35,7 @@ function setup() {
   videoRecorder = new p5.VideoRecorder();
 }
 ```
+
 See [Examples](https://github.com/calebfoss/p5.videorecorder#examples) and [Reference](https://github.com/calebfoss/p5.videorecorder#reference) for usage.
 
 ## Examples
@@ -52,7 +54,7 @@ Class for recording video from the sketch. If no arguments are passed into the c
 
 The recorded video file may not be available immediately after the stop() method is called. Set the onFileReady callback to call a function when the recorder has finished creating the video file.
 
-Ability to record inputs may vary based on the browser. Recording the canvas is supported by most contemporary browsers (see [browser compatibility](https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/captureStream#browser_compatibility)), but recording media elements currently has limited support (see [browser compatibility](https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/captureStream#browser_compatibility)).
+Ability to record inputs may vary based on the browser. Recording the canvas is supported by most contemporary browsers (see [browser compatibility](https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/captureStream#browser_compatibility)), but recording media elements currently has limited support (see [browser compatibility](https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/captureStream#browser_compatibility)). You can check whether an object can be recorded by passing it into the canRecord() method (see [Reference](https://github.com/calebfoss/p5.videorecorder#methods)).
 
 #### Syntax
 
@@ -62,33 +64,37 @@ Ability to record inputs may vary based on the browser. Recording the canvas is 
 
 | name   | type: description                                                                                                                                             |
 | ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| input  | p5.Element\|AudioNode\|Array: element, node, or array of elements/nodes to record (Optional)                                                                                                   |
+| input  | p5.Element\|AudioNode\|Array: element, node, or array of elements/nodes to record (Optional)                                                                  |
 | format | String: [mimeType](https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Common_types) or extension to be used for recording (Optional) |
 
 #### Properties
 
-| name        | description                                                                                                                                             |
-| ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| blob        | video file available after recording is completed (Read-only)                                                                                           |
-| format      | [mimeType](https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Common_types) or extension to be used for recording (Write-only) |
-| input       | element, node, or array of elments/nodes to record (Write-only)                                                                                                                  |
-| onFileReady | callback called after recording is completed and blob is created                                                                                        |
-| stream      | MediaStream for selected input(s) (Read-only)                                                                                                           |
-| url         | url pointing to video file available after recording is completed (Read-only)                                                                           |
+| name        | description                                                                                                                                |
+| ----------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
+| blob        | video file available after recording is completed (Read-only)                                                                              |
+| format      | [mimeType](https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Common_types) or extension to be used for recording |
+| input       | element, node, or array of elments/nodes to record (Write-only)                                                                            |
+| onFileReady | callback called after recording is completed and blob is created                                                                           |
+| stream      | MediaStream for selected input(s) (Read-only)                                                                                              |
+| url         | url pointing to video file available after recording is completed (Read-only)                                                              |
 
 #### Methods
 
-| name                      | description                                                                                                                                                                                         |
-| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| addInput(input)           | add another input to the existing MediaStream                                                                                                                                                       |
-| erase()                   | delete the contents of the recording                                                                                                                                                                |
+| name                | description                                                                                                                                                                                                                                       |
+| ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| addInput(input)     | add another input to the existing MediaStream                                                                                                                                                                                                     |
+| canRecord(input)    | returns true/false indicating if the given input can be recorded (call static canRecord method on p5.VideoRecorder)                                                                                                                               |
+| erase()             | delete the contents of the recording                                                                                                                                                                                                              |
 | isSupported(format) | returns true/false indicating if the given [mimeType](https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Common_types) or video format is supported by the browser (calls static isSupported method on p5.VideoRecorder) |
-|pause()|pause the recording|
-|resume()|resume the recording|
-| save(filename)            | download the recording                                                                                                                                                                              |
-| start()                   | start recording                                                                                                                                                                                     |
-| stop()                    | stop recording, create Blob (video file) and url, and then call the onFileReady callback.                                                                                                           |
+| pause()             | pause the recording                                                                                                                                                                                                                               |
+| resume()            | resume the recording                                                                                                                                                                                                                              |
+| save(filename)      | download the recording                                                                                                                                                                                                                            |
+| start()             | start recording                                                                                                                                                                                                                                   |
+| stop()              | stop recording, create Blob (video file) and url, and then call the onFileReady callback.                                                                                                                                                         |
+
 #### Static Methods
-|name|description|
-|-|-|
+
+| name                | description                                                                                                                                                                                 |
+| ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | isSupported(format) | returns true/false indicating if the given [mimeType](https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Common_types) or video format is supported by the browser |
+| canRecord(input)    | returns true/false indicating if the given input can be recorded                                                                                                                            |

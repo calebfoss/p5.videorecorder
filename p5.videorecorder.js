@@ -87,6 +87,17 @@ p5.VideoRecorder = class {
       throw "erase() was called while the video recorder was recording. Call stop() before erasing.";
     this.#chunks = [];
   }
+  canRecord(input) {
+    return p5.VideoRecorder.canRecord(input);
+  }
+  static canRecord(input) {
+    return (
+      input instanceof MediaStream ||
+      input instanceof AudioNode ||
+      typeof input.captureStream === "function" ||
+      typeof input.elt?.captureStream === "function"
+    );
+  }
   #createBlob() {
     this.#blob = new Blob(this.#chunks, { type: this.#recorder.mimeType });
     this.#url = URL.createObjectURL(this.#blob);
@@ -104,13 +115,14 @@ p5.VideoRecorder = class {
     return this.#stream;
   }
   #inputToStream(input) {
+    if (this.canRecord(input) === false)
+      throw "VideoRecorder input cannot be recorded in this browser";
     if (input instanceof MediaStream) return input;
     if (input instanceof AudioNode) return this.#audioNodeToStream(input);
     if (typeof input.captureStream === "function")
       return this.#mediaElementToStream(input);
     if (input instanceof p5.Element)
       return this.#mediaElementToStream(input.elt);
-    throw "VideoRecorder input is does not contain an element with a media stream that can be captured";
   }
   #mediaElementToStream(mediaElement) {
     if (typeof mediaElement.captureStream !== "function")

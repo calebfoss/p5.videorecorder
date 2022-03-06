@@ -1,3 +1,6 @@
+/* [p5.videorecorder] Version - 0.2 - 03-06-2022
+https://github.com/calebfoss/p5.videorecorder */
+
 p5.VideoRecorder = class {
   #blob;
   #chunks;
@@ -36,6 +39,9 @@ p5.VideoRecorder = class {
     this.#stream = stream;
     this.#createRecorder();
   }
+  get format() {
+    return this.#recorder.mimeType;
+  }
   set format(format) {
     if (p5.VideoRecorder.isSupported(format) == false)
       throw `Video format ${format} not supported`;
@@ -44,6 +50,7 @@ p5.VideoRecorder = class {
     this.#mimeType = format.split("/").length > 1 ? format : `video/${format}`;
     if (this.#stream !== undefined) this.#createRecorder();
   }
+  
   get recording() {
     if (this.#recorder === undefined) return false;
     return this.#recorder.state === "recording";

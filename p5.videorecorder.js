@@ -26,7 +26,7 @@ p5.VideoRecorder = class {
       if (typeof drawingContext?.canvas === "undefined")
         throw "VideoRecorder couldn't find canvas to record";
       this.addInput(drawingContext.canvas);
-      if (soundOut?.output !== undefined) this.addInput(soundOut.output);
+      if (typeof soundOut !== "undefined" && soundOut.output !== undefined) this.addInput(soundOut.output);
 
       return;
     }

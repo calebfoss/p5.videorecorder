@@ -3,37 +3,46 @@ p5.VideoRecorder = class {
   #chunks;
   #mimeType;
   #recorder;
-  #src;
+  #stream;
   #url;
   onFileReady;
 
-  constructor(src, format = "webm") {
-    if (src == undefined)
-      throw "Missing required argument 'src' from VideoRecorder constructor.";
+  constructor(input, format = "webm") {
     this.format = format;
-    this.src = src;
-    this.erase();
-    this.#recorder.onstop = () => this.#createBlob();
-    this.#recorder.ondataavailable = (e) => this.#chunks.push(e.data);
+    this.input = input;
   }
-  get src() {
-    return this.#src;
+  get blob() {
+    return this.#blob;
   }
-  set src(src) {
-    const stream = Array.isArray(src)
-      ? this.#srcArrayToStream(src)
-      : this.#srcToStream(src);
-    this.#src = src;
-    this.#createRecorder(stream);
+  get stream() {
+    return this.#stream;
+  }
+  set input(input) {
+    if (this.#stream !== undefined && this.#stream === input) return;
+    if (this.recording)
+      throw "VideoRecorder input was assigned a new value while recording. \
+      Call stop() before changine the input";
+    if (input === undefined) {
+      if (typeof drawingContext?.canvas === "undefined")
+        throw "VideoRecorder couldn't find canvas to record";
+      this.addInput(drawingContext.canvas);
+      if (soundOut?.output !== undefined) this.addInput(soundOut.output);
+
+      return;
+    }
+    const stream = Array.isArray(input)
+      ? this.#inputArrayToStream(input)
+      : this.#inputToStream(input);
+    this.#stream = stream;
+    this.#createRecorder();
   }
   set format(format) {
     if (p5.VideoRecorder.isFormatSupported(format) == false)
       throw `Video format ${format} not supported`;
     if (this.recording)
       throw "Can't set format while video recorder is recording";
-    this.#mimeType = `video/${format}`;
-    if (this.#recorder !== undefined)
-      this.#createRecorder(this.#recorder.stream);
+    this.#mimeType = format.split("/").length > 1 ? format : `video/${format}`;
+    if (this.#stream !== undefined) this.#createRecorder();
   }
   get recording() {
     if (this.#recorder === undefined) return false;
@@ -41,6 +50,22 @@ p5.VideoRecorder = class {
   }
   get url() {
     return this.#url;
+  }
+  addInput(input) {
+    if (this.#stream === undefined) {
+      this.input = input;
+      return;
+    }
+    this.#inputToStream(input)
+      .getTracks()
+      .forEach((track) => this.#stream.addTrack(track));
+    this.#createRecorder();
+  }
+  #audioNodeToStream(input) {
+    const { context } = input;
+    const destination = context.createMediaStreamDestination();
+    input.connect(destination);
+    return destination.stream;
   }
   erase() {
     if (this.recording)
@@ -52,28 +77,36 @@ p5.VideoRecorder = class {
     this.#url = URL.createObjectURL(this.#blob);
     if (typeof this.onFileReady === "function") this.onFileReady();
   }
-  #createRecorder(stream) {
-    this.#recorder = new MediaRecorder(stream, { mimeType: this.#mimeType });
+  #createRecorder() {
+    this.#recorder = new MediaRecorder(this.#stream, {
+      mimeType: this.#mimeType,
+    });
+    this.#recorder.onstop = () => this.#createBlob();
+    this.#recorder.ondataavailable = (e) => this.#chunks.push(e.data);
+  }
+  #inputArrayToStream(inputArray) {
+    inputArray.forEach((input) => this.addInput(input));
+    return this.#stream;
+  }
+  #inputToStream(input) {
+    if (input instanceof MediaStream) return input;
+    if (input instanceof AudioNode) return this.#audioNodeToStream(input);
+    if (typeof input.captureStream === "function")
+      return this.#mediaElementToStream(input);
+    if (input instanceof p5.Element)
+      return this.#mediaElementToStream(input.elt);
+    throw "VideoRecorder input is does not contain an element with a media stream that can be captured";
   }
   #mediaElementToStream(mediaElement) {
     if (typeof mediaElement.captureStream !== "function")
-      throw `Can't capture stream from src ${mediaElement}`;
+      throw `Can't capture stream from input ${mediaElement}`;
     return mediaElement.captureStream();
-  }
-  #srcArrayToStream(srcArray) {
-    const tracks = srcArray.map((s) => this.#srcToStream(s).getTracks()).flat();
-    return new MediaStream(tracks);
-  }
-  #srcToStream(src) {
-    if (src instanceof HTMLMediaElement) return this.#mediaElementToStream(src);
-    if (src instanceof p5.Element) return this.#mediaElementToStream(src.elt);
-    throw "src is not of type p5.Element, p5.MediaElement, or HTMLMediaElement";
   }
   save(filename) {
     if (this.#blob === undefined)
       throw "save() was called before a video file was created.\
       Use onFileReady event to call a function when the video file is ready.";
-    let extension = this.#mimeType.split("/")[1];
+    let extension = this.#mimeType.match(/\/([^;]*)/)?.[1];
     [filename, extension] = p5.prototype._checkFileExtension(
       filename,
       extension
@@ -81,10 +114,13 @@ p5.VideoRecorder = class {
     p5.prototype.downloadFile(this.#blob, filename, extension);
   }
   start() {
+    this.erase();
     this.#recorder.start();
   }
   static isFormatSupported(format) {
-    return MediaRecorder.isTypeSupported(`video/${format}`);
+    return MediaRecorder.isTypeSupported(
+      format.split("/").length > 1 ? format : `video/${format}`
+    );
   }
   stop() {
     if (!this.recording)

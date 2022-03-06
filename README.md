@@ -53,7 +53,7 @@ Ability to record inputs may vary based on the browser. Recording the canvas is 
 
 | name   | type: description                                                                                                                                             |
 | ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| input  | p5.Element\|AudioNode: element or node to record (Optional)                                                                                                   |
+| input  | p5.Element\|AudioNode\|Array: element, node, or array of elements/nodes to record (Optional)                                                                                                   |
 | format | String: [mimeType](https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Common_types) or extension to be used for recording (Optional) |
 
 #### Properties
@@ -62,7 +62,7 @@ Ability to record inputs may vary based on the browser. Recording the canvas is 
 | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | blob        | video file available after recording is completed (Read-only)                                                                                           |
 | format      | [mimeType](https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Common_types) or extension to be used for recording (Write-only) |
-| input       | element or node to record (Write-only)                                                                                                                  |
+| input       | element, node, or array of elments/nodes to record (Write-only)                                                                                                                  |
 | onFileReady | callback called after recording is completed and blob is created                                                                                        |
 | stream      | MediaStream for selected input(s) (Read-only)                                                                                                           |
 | url         | url pointing to video file available after recording is completed (Read-only)                                                                           |

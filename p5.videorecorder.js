@@ -102,6 +102,12 @@ p5.VideoRecorder = class {
       throw `Can't capture stream from input ${mediaElement}`;
     return mediaElement.captureStream();
   }
+  pause() {
+    this.#recorder.pause();
+  }
+  resume() {
+    this.#recorder.resume();
+  }
   save(filename) {
     if (this.#blob === undefined)
       throw "save() was called before a video file was created.\

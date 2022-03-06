@@ -8,7 +8,7 @@ p5.VideoRecorder = class {
   #recorder;
   #stream;
   #url;
-  onFileReady;
+  #onFileReady;
 
   constructor(input, format = "webm") {
     this.format = format;
@@ -29,7 +29,8 @@ p5.VideoRecorder = class {
       if (typeof drawingContext?.canvas === "undefined")
         throw "VideoRecorder couldn't find canvas to record";
       this.addInput(drawingContext.canvas);
-      if (typeof soundOut !== "undefined" && soundOut.output !== undefined) this.addInput(soundOut.output);
+      if (typeof soundOut !== "undefined" && soundOut.output !== undefined)
+        this.addInput(soundOut.output);
 
       return;
     }
@@ -50,7 +51,14 @@ p5.VideoRecorder = class {
     this.#mimeType = format.split("/").length > 1 ? format : `video/${format}`;
     if (this.#stream !== undefined) this.#createRecorder();
   }
-  
+  get onFileReady() {
+    return this.#onFileReady;
+  }
+  set onFileReady(callback) {
+    if (typeof callback !== "function")
+      throw `VideoRecorder onFileReady must be of type function but was assigned to ${typeof callback}`;
+    this.#onFileReady = callback;
+  }
   get recording() {
     if (this.#recorder === undefined) return false;
     return this.#recorder.state === "recording";
@@ -82,7 +90,7 @@ p5.VideoRecorder = class {
   #createBlob() {
     this.#blob = new Blob(this.#chunks, { type: this.#recorder.mimeType });
     this.#url = URL.createObjectURL(this.#blob);
-    if (typeof this.onFileReady === "function") this.onFileReady();
+    if (typeof this.#onFileReady === "function") this.#onFileReady();
   }
   #createRecorder() {
     this.#recorder = new MediaRecorder(this.#stream, {

@@ -1,4 +1,4 @@
-/* [p5.videorecorder] Version - 0.2 - 03-06-2022
+/* [p5.videorecorder] Version - 0.2.1 - 03-07-2022
 https://github.com/calebfoss/p5.videorecorder */
 
 p5.VideoRecorder = class {

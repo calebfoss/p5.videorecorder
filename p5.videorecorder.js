@@ -27,12 +27,14 @@ p5.VideoRecorder = class {
   set input(input) {
     if (this.#stream !== undefined && this.#stream === input) return;
     if (this.recording)
-      throw "VideoRecorder input was assigned a new value while recording. \
-      Call stop() before changine the input";
+      return console.error(
+        "VideoRecorder input was assigned a new value while recording. \
+      Call stop() before changing the input"
+      );
     if (input === undefined) {
       if (typeof drawingContext?.canvas === "undefined")
-        throw "VideoRecorder couldn't find canvas to record";
-      this.addInput(drawingContext.canvas);
+        console.error("VideoRecorder couldn't find canvas to record");
+      else this.input = drawingContext.canvas;
       if (typeof soundOut !== "undefined" && soundOut.output !== undefined)
         this.addInput(soundOut.output);
       return;
@@ -48,10 +50,15 @@ p5.VideoRecorder = class {
     return this.#recorder.mimeType;
   }
   set format(format) {
+    if (format.charAt(0) === ".") format = format.slice(1);
     if (p5.VideoRecorder.isSupported(format) == false)
-      throw `Video format ${format} not supported`;
+      return console.error(
+        `Video format ${format} is not supported on this browser`
+      );
     if (this.recording)
-      throw "Can't set format while video recorder is recording";
+      return console.error(
+        "Can't set format while video recorder is recording"
+      );
     this.#mimeType = format.split("/").length > 1 ? format : `video/${format}`;
     if (this.#stream !== undefined) this.#createRecorder();
   }
@@ -60,7 +67,9 @@ p5.VideoRecorder = class {
   }
   set onFileReady(callback) {
     if (typeof callback !== "function")
-      throw `VideoRecorder onFileReady must be of type function but was assigned to ${typeof callback}`;
+      return console.error(
+        `VideoRecorder onFileReady must be of type function but was assigned to ${typeof callback}`
+      );
     this.#onFileReady = callback;
   }
   get recording() {
@@ -88,7 +97,9 @@ p5.VideoRecorder = class {
   }
   erase() {
     if (this.recording)
-      throw "erase() was called while the video recorder was recording. Call stop() before erasing.";
+      return console.error(
+        "erase() was called while the video recorder was recording. Call stop() before erasing."
+      );
     this.#chunks = [];
   }
   canRecord(input) {
@@ -119,8 +130,10 @@ p5.VideoRecorder = class {
     return this.#stream;
   }
   #inputToStream(input) {
-    if (this.canRecord(input) === false)
-      throw "VideoRecorder input cannot be recorded in this browser";
+    if (this.canRecord(input) == false)
+      return console.error(
+        `Selected VideoRecorder input of type ${typeof input} cannot be recorded in this browser`
+      );
     if (input instanceof MediaStream) return input;
     if (input instanceof AudioNode) return this.#audioNodeToStream(input);
     if (typeof input.captureStream === "function")
@@ -128,9 +141,18 @@ p5.VideoRecorder = class {
     if (input instanceof p5.Element)
       return this.#mediaElementToStream(input.elt);
   }
+  isSupported(format) {
+    return p5.VideoRecorder.isSupported(format);
+  }
+  static isSupported(format) {
+    if (format.charAt(0) === ".") format = format.slice(1);
+    return MediaRecorder.isTypeSupported(
+      format.split("/").length > 1 ? format : `video/${format}`
+    );
+  }
   #mediaElementToStream(mediaElement) {
     if (typeof mediaElement.captureStream !== "function")
-      throw `Can't capture stream from input ${mediaElement}`;
+      return console.error(`Can't capture stream from input ${mediaElement}`);
     return mediaElement.captureStream();
   }
   pause() {
@@ -141,8 +163,10 @@ p5.VideoRecorder = class {
   }
   save(filename) {
     if (this.#blob === undefined)
-      throw "save() was called before a video file was created.\
-      Use onFileReady event to call a function when the video file is ready.";
+      return console.error(
+        "save() was called before a video file was created.\
+      Use onFileReady event to call a function when the video file is ready."
+      );
     let extension = this.#mimeType.match(/\/([^;]*)/)?.[1];
     [filename, extension] = p5.prototype._checkFileExtension(
       filename,
@@ -154,17 +178,11 @@ p5.VideoRecorder = class {
     this.erase();
     this.#recorder.start();
   }
-  isSupported(format) {
-    return p5.VideoRecorder.isSupported(format);
-  }
-  static isSupported(format) {
-    return MediaRecorder.isTypeSupported(
-      format.split("/").length > 1 ? format : `video/${format}`
-    );
-  }
   stop() {
-    if (!this.recording)
-      throw "stop() was called while the video recorder was not recording. Call start() before stopping.";
+    console.assert(
+      this.recording,
+      "stop() was called while the video recorder was not recording. Call start() before stopping."
+    );
     this.#recorder.stop();
   }
 };

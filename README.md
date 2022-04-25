@@ -1,6 +1,8 @@
+![p5.videorecorder logo](/p5_videorecorder_logo.jpg)
+
 # p5.videorecorder
 
-p5.videorecorder is a [p5js](https://p5js.org) library for recording video from sketches using the [MediaRecorder api](https://developer.mozilla.org/en-US/docs/Web/API/MediaRecorder). The library adds a p5.VideoRecorder class.
+p5.videorecorder is a small [p5js](https://p5js.org) add-on for recording video from sketches using the [MediaRecorder api](https://developer.mozilla.org/en-US/docs/Web/API/MediaRecorder). The library adds a p5.VideoRecorder class.
 
 ## Getting Started
 
